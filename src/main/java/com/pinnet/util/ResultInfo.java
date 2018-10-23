@@ -1,5 +1,8 @@
 package com.pinnet.util;
 
+/**
+ * 返回数据
+ */
 public class ResultInfo {
     private Boolean status = true;
     private Object data;
