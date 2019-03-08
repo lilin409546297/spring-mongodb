@@ -1,19 +1,72 @@
 package com.pinnet.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
+import org.springframework.data.mongodb.core.query.Query;
 
-/**
- * Funtion: TODO.
- * <p>
- * Author: lWX559685
- * Date: 2018/10/23 13:36
- */
+import java.io.*;
+import java.util.List;
+
 public interface IMongoService {
 
-    public String uploadFile(HttpServletRequest request) throws IOException;
-    public void downloadFile(Map<String, Object> map, HttpServletResponse response) throws IOException;
-    public void deleteFile(Map<String, Object> map);
+    /**
+     * 上传文件
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     */
+    String uploadFile(File file) throws FileNotFoundException;
+
+
+    /**
+     * 上传文件
+     * @param inputStream
+     * @param fileName
+     * @return
+     */
+    String uploadFile(InputStream inputStream, String fileName);
+
+    /**
+     * 下载文件
+     * @param mongoId
+     * @param outputStream
+     */
+    void downloadFile(String mongoId, OutputStream outputStream) throws IOException;
+
+    /**
+     * 删除文件
+     * @param mongoId
+     */
+    void deleteFile(String mongoId);
+
+    /**
+     * 保存对象
+     * @param t
+     * @param <T>
+     */
+    <T> void save(T t);
+
+    /**
+     * 查询对象
+     * @param query
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    <T> List<T> find(Query query, Class<T> clazz);
+
+    /**
+     * 查询单个对象
+     * @param query
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    <T> T findOne(Query query, Class<T> clazz);
+
+    /**
+     * 删除对象
+     * @param query
+     * @param clazz
+     * @param <T>
+     */
+    <T> void delete(Query query, Class<T> clazz);
 }

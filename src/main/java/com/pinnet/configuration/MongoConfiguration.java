@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 
+/**
+ * file 文件处理配置
+ */
 @Configuration
 public class MongoConfiguration {
 

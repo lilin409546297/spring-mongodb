@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -24,10 +24,10 @@ public class FileController {
     private IMongoService mongoService;
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public ResultInfo uploadFile(HttpServletRequest request) {
+    public ResultInfo uploadFile(MultipartFile multipartFile) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-            resultInfo.setData(mongoService.uploadFile(request));
+            resultInfo.setData(mongoService.uploadFile(multipartFile.getInputStream(), multipartFile.getOriginalFilename()));
         } catch (Exception e) {
             logger.error("upload file error:", e);
             resultInfo.setStatus(false);
@@ -40,7 +40,9 @@ public class FileController {
     public ResultInfo downloadFile(@RequestBody Map<String, Object> map, HttpServletResponse response) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-            mongoService.downloadFile(map, response);
+            response.setContentType("multipart/form-data");
+            response.setHeader("Content-Disposition", "attachment;fileName=test.mp3");
+            mongoService.downloadFile(map.get("mongoId").toString(), response.getOutputStream());
         } catch (Exception e) {
             logger.error("download file error:", e);
             resultInfo.setStatus(false);
@@ -53,7 +55,7 @@ public class FileController {
     public ResultInfo deleteFile(@RequestBody Map<String, Object> map) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-            mongoService.deleteFile(map);
+            mongoService.deleteFile(map.get("mongoId").toString());
         } catch (Exception e) {
             logger.error("delete file error:", e);
             resultInfo.setStatus(false);
